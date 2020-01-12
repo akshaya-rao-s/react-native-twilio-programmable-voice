@@ -17,6 +17,7 @@ const _eventHandlers = {
     deviceDidReceiveIncoming: new Map(),
     connectionDidConnect: new Map(),
     connectionDidDisconnect: new Map(),
+    callStateRinging: new Map(),
     //iOS specific
     callRejected: new Map(),
 }
@@ -101,6 +102,10 @@ const Twilio = {
         }
     },
     addEventListener(type, handler) {
+        if (!_eventHandlers.hasOwnProperty(type)) {
+            throw new Error('Event handler not found:', type)
+        }
+        if (_eventHandlers[type])
         if (_eventHandlers[type].has(handler)) {
             return
         }

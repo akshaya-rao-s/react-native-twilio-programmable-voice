@@ -3,7 +3,7 @@ This is a React Native wrapper for Twilio Programmable Voice SDK that lets you m
 
 # Twilio Programmable Voice SDK
 
-- Android 2.1.0 (bundled within this library)
+- Android 3.3.0 (bundled within this library)
 - iOS 2.1.0 (specified by the app's own podfile)
 
 ## Breaking changes in v4.0.0
@@ -20,6 +20,8 @@ This is a React Native wrapper for Twilio Programmable Voice SDK that lets you m
     </service>
     <!-- [END instanceId_listener] -->
 ```
+
+Data passed to the event `deviceDidReceiveIncoming` does not contain the key `call_state`, because state of Call Invites was removed in Twilio Android v3.0.0
 
 - iOS: params changes for `connectionDidConnect` and `connectionDidDisconnect`
 
@@ -254,14 +256,14 @@ TwilioVoice.addEventListener('connectionDidConnect', function(data) {
     // Android
     // {
     //     call_sid: string,  // Twilio call sid
-    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' 'DISCONNECTED' | 'CANCELLED',
+    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' | 'RINGING' | 'DISCONNECTED' | 'CANCELLED',
     //     call_from: string, // "+441234567890"
     //     call_to: string,   // "client:bob"
     // }
     // iOS
     // {
     //     call_sid: string,  // Twilio call sid
-    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' 'DISCONNECTED' | 'CANCELLED',
+    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' | 'DISCONNECTED' | 'CANCELLED',
     //     from: string,      // "+441234567890" // issue 44 (https://github.com/hoxfon/react-native-twilio-programmable-voice/issues/44)
     //     to: string,        // "client:bob"    // issue 44 (https://github.com/hoxfon/react-native-twilio-programmable-voice/issues/44)
     // }
@@ -274,7 +276,7 @@ TwilioVoice.addEventListener('connectionDidDisconnect', function(data: mixed) {
     //   | Android
     //     {
     //         call_sid: string,  // Twilio call sid
-    //         call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' 'DISCONNECTED' | 'CANCELLED',
+    //         call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' | 'RINGING' | 'DISCONNECTED' | 'CANCELLED',
     //         call_from: string, // "+441234567890"
     //         call_to: string,   // "client:bob"
     //         err?: string,
@@ -282,7 +284,7 @@ TwilioVoice.addEventListener('connectionDidDisconnect', function(data: mixed) {
     //   | iOS
     //     {
     //         call_sid: string,  // Twilio call sid
-    //         call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' 'DISCONNECTED' | 'CANCELLED',
+    //         call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' |'DISCONNECTED' | 'CANCELLED',
     //         call_from?: string, // "+441234567890"
     //         call_to?: string,   // "client:bob"
     //         from?: string,      // "+441234567890" // issue 44 (https://github.com/hoxfon/react-native-twilio-programmable-voice/issues/44)
@@ -298,7 +300,7 @@ TwilioVoice.addEventListener('callRejected', function(value: 'callRejected') {})
 TwilioVoice.addEventListener('deviceDidReceiveIncoming', function(data) {
     // {
     //     call_sid: string,  // Twilio call sid
-    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' 'DISCONNECTED' | 'CANCELLED',
+    //     call_state: 'PENDING' | 'CONNECTED' | 'ACCEPTED' | 'CONNECTING' | 'RINGING' | 'DISCONNECTED' | 'CANCELLED', ==> this is removed in v4
     //     call_from: string, // "+441234567890"
     //     call_to: string,   // "client:bob"
     // }
@@ -339,6 +341,10 @@ TwilioVoice.ignore()
 // mutedValue must be a boolean
 TwilioVoice.setMuted(mutedValue)
 
+// put a call on hold
+TwilioVoice.setOnHold(holdValue)
+
+// send digits
 TwilioVoice.sendDigits(digits)
 
 // should be called after the app is initialized
