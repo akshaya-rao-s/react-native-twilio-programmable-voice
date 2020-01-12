@@ -252,6 +252,7 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
                 }
                 eventManager.sendEvent(EVENT_CALL_STATE_RINGING, params);
             }
+
             @Override
             public void onConnected(Call call) {
                 if (BuildConfig.DEBUG) {
@@ -303,14 +304,13 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
 
             @Override
             public void onDisconnected(Call call, CallException error) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "CALL DISCONNECTED callListener().onDisconnected call state = "+call.getState());
+                }
                 unsetAudioFocus();
                 proximityManager.stopProximitySensor();
                 headsetManager.stopWiredHeadsetEvent(getReactApplicationContext());
                 callAccepted = false;
-
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "call disconnected");
-                }
 
                 WritableMap params = Arguments.createMap();
                 String callSid = "";
@@ -347,14 +347,15 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
 
             @Override
             public void onConnectFailure(Call call, CallException error) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "CALL FAILURE callListener().onConnectFailure call state = "+call.getState());
+                }
                 unsetAudioFocus();
                 proximityManager.stopProximitySensor();
                 callAccepted = false;
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "connect failure");
-                }
 
-                Log.e(TAG, String.format("CallListener onDisconnected error: %d, %s",
+
+                Log.e(TAG, String.format("CallListener onConnectFailure error: %d, %s",
                     error.getErrorCode(), error.getMessage()));
 
                 WritableMap params = Arguments.createMap();
@@ -733,9 +734,9 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
     }
 
     @ReactMethod
-    public void setMuted(Boolean muteValue) {
+    public void setMuted(Boolean value) {
         if (activeCall != null) {
-            activeCall.mute(muteValue);
+            activeCall.mute(value);
         }
     }
 
