@@ -68,7 +68,8 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
     private static final int MIC_PERMISSION_REQUEST_CODE = 1;
 
     private AudioManager audioManager;
-    private int originalAudioMode = AudioManager.MODE_NORMAL;
+    //private int originalAudioMode = AudioManager.MODE_NORMAL;
+	private int savedAudioMode = AudioManager.MODE_NORMAL;
 
     private boolean isReceiverRegistered = false;
     private VoiceBroadcastReceiver voiceBroadcastReceiver;
