@@ -123,7 +123,12 @@ public class TwilioVoiceModule extends ReactContextBaseJavaModule implements Act
     private AudioFocusRequest focusRequest;
     private HeadsetManager headsetManager;
     private EventManager eventManager;
-
+	
+	@Override    
+	public boolean canOverrideExistingModule() {        
+		return true;    
+	}
+ 
     public TwilioVoiceModule(ReactApplicationContext reactContext,
     boolean shouldAskForMicPermission) {
         super(reactContext);
